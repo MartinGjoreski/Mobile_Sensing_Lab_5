@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*">
+
+            <TableRow>
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:onClick="getInnerVersion"
+                    android:text="getInnerVersion" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:onClick="setSystemTime"
+                    android:text="setSystemTime" />
+            </TableRow>
+
+            <TableRow>
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:onClick="setUserInfo"
+                    android:text="setUserInfo" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:onClick="getUserInfo"
+                    android:text="getUserInfo" />
+
+            </TableRow>
+
+            <TableRow>
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:onClick="setAllAlarms"
+                    android:text="setAllAlarms" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:onClick="getAllAlarms"
+                    android:text="getAllAlarms" />
+            </TableRow>
+
+            <TableRow>
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:onClick="setUnitType"
+                    android:text="setUnitType" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:onClick="getUnitType"
+                    android:text="getUnitType" />
+            </TableRow>
+
+            <TableRow>
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:onClick="setTimeFormat"
+                    android:text="setTimeFormat" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:onClick="getTimeFormat"
+                    android:text="getTimeFormat" />
+            </TableRow>
+
+            <TableRow>
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:onClick="setAutoLigten"
+                    android:text="setAutoLigten" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="getAutoLigten"
+                    android:text="getAutoLigten" />
+            </TableRow>
+
+            <TableRow>
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:onClick="setSitAlert"
+                    android:text="setSitAlert" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="getSitAlert"
+                    android:text="getSitAlert" />
+            </TableRow>
+
+            <TableRow>
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:onClick="setLastScreen"
+                    android:text="setLastScreen" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:onClick="getLastScreen"
+                    android:text="getLastScreen" />
+            </TableRow>
+
+
+            <TableRow>
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:onClick="setHeartRateInterval"
+                    android:text="setHeartRateInterval" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:onClick="getHeartRateInterval"
+                    android:text="getHeartRateInterval" />
+            </TableRow>
+
+            <TableRow>
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:onClick="setCustomSortScreen"
+                    android:text="setCustomSortScreen" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:onClick="getCustomSortScreen"
+                    android:text="getCustomSortScreen" />
+            </TableRow>
+
+            <TableRow>
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:onClick="setStepTarget"
+                    android:text="setStepTarget" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:onClick="getStepTarget"
+                    android:text="getStepTarget" />
+            </TableRow>
+
+            <TableRow>
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:onClick="setDial"
+                    android:text="setDial" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:onClick="getDial"
+                    android:text="getDial" />
+            </TableRow>
+
+            <TableRow>
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:onClick="setNoDiturb"
+                    android:text="setNoDiturb" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:onClick="getNoDiturb"
+                    android:text="getNoDiturb" />
+            </TableRow>
+
+            <TableRow>
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:onClick="setDateFormat"
+                    android:text="setDateFormat" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:onClick="getDateFormat"
+                    android:text="getDateFormat" />
+            </TableRow>
+
+            <TableRow>
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:onClick="setShakeStrength"
+                    android:text="setShakeStrength" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:onClick="getShakeStrength"
+                    android:text="getShakeStrength" />
+            </TableRow>
+            <TableRow>
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:onClick="setStepInterval"
+                    android:text="setStepInterval" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:onClick="getStepInterval"
+                    android:text="getStepInterval" />
+            </TableRow>
+
+            <TableRow>
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:onClick="getLastestSteps"
+                    android:text="getLastestSteps" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:onClick="getLastestSleeps"
+                    android:text="getLastestSleeps" />
+            </TableRow>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="getLastestHeartRate"
+                android:text="getLastestHeartRate" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="openStepChangeListener"
+                android:text="openStepChangeListener" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="getFirmwareParams"
+                android:text="getFirmwareParams" />
+
+            <TableRow>
+
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:onClick="getLastChargeTime"
+                    android:text="getLastChargeTime" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:onClick="getBattery"
+                    android:text="getBattery" />
+            </TableRow>
+
+            <TableRow>
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:onClick="openFindPhone"
+                    android:text="openFindPhone" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:onClick="setLanguage"
+                    android:text="setLanguage" />
+            </TableRow>
+
+            <TableRow>
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:onClick="shakeBand"
+                    android:text="setShakeBand" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:onClick="sendMultiOrders"
+                    android:text="sendMultiOrders" />
+            </TableRow>
+
+            <TableRow>
+
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:onClick="upgradeFirmware"
+                    android:text="upgradeFirmware" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:onClick="notification"
+                    android:text="notification" />
+            </TableRow>
+
+            <TableRow>
+
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:onClick="reset"
+                    android:text="reset" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:onClick="close"
+                    android:text="close" />
+            </TableRow>
+
+            <TableRow>
+
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:onClick="getSportData"
+                    android:text="getSportData" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:onClick="getSportHeartRate"
+                    android:text="getSportHeartRate" />
+            </TableRow>
+
+        </TableLayout>
+    </ScrollView>
+
+</LinearLayout>
