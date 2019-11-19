@@ -11,7 +11,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.service.autofill.BatchUpdates;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -133,11 +132,14 @@ public class SmartSensing extends BaseActivity  {
                     OrderEnum orderEnum = (OrderEnum) intent.getSerializableExtra(MokoConstants.EXTRA_KEY_CURRENT_DATA_TYPE);
                     switch (orderEnum) {
                         case Z_STEPS_CHANGES_LISTENER:
+                            //get current daily steps and save the info in DAILY_STEPS
+                            //save current time in DAILY_STEPS_TIME
+                            //call UpdateSensing() to refresh the app
                             DailyStep dailyStep = MokoSupport.getInstance().getDailyStep();
                             DAILY_STEPS = dailyStep;
                             Calendar c =  Calendar.getInstance();
                             DAILY_STEPS_TIME= c.getTimeInMillis();
-                            updateSensing();
+                            UpdateSensing();
                             break;
                     }
                 }
@@ -153,6 +155,7 @@ public class SmartSensing extends BaseActivity  {
     }
 
 
+    //APP CONSTANTS
     private static final int SPORTS_SENSING = 0; // 0： turn off normal sesnig and activate sports sensing
     private static final int NORMAL_SENSING = 1; // 1： 10mins；
     private static final int SLEEP_SENSING =  3; // 3： 30mins
@@ -160,13 +163,12 @@ public class SmartSensing extends BaseActivity  {
     private static final int SLEEP_HOUR_START = 23; // sleep period start
     private static final int SLEEP_HOUR_END = 6; // sleep period end
 
-
     private static final int CARDIO_ZONE_1_START = 1; //steps per second
-    private static final int CARDIO_ZONE_2_START  = 3;  //CARDIO ZONE 2: 120 - 140 BPM - INTERMEDIATE INTENSITY,
-    private static final int CARDIO_ZONE_3_START  = 6;  //CARDIO ZONE 3: 140 - 160 BPM - PERFORMANCE TRAINING,
-    private static final int CARDIO_ZONE_4_START  = 9;  //DANGER ZONE 4: OVER 180 BPM - DANGER ZONE, ONLY FOR ATHLETES
-    private static final int BAND_UPDATE_INTERVAL  = 30;  //ONCE PER x seconds
+    private static final int CARDIO_ZONE_2_START  = 3;  //steps per second
+    private static final int CARDIO_ZONE_3_START  = 6;  //steps per second
+    private static final int CARDIO_ZONE_4_START  = 9;  //steps per second
 
+    private static final int BAND_UPDATE_INTERVAL  = 30;  //send message to the band only once per 30 seconds
 
     private static final String CARDIO_ZONE_0_MSG = "VERY LOW INTENSITY.";
     private static final String CARDIO_ZONE_1_MSG = "LOW INTENSITY.";
@@ -175,13 +177,14 @@ public class SmartSensing extends BaseActivity  {
     private static final String CARDIO_ZONE_4_MSG = "EXTREME INTENSITY.";
 
 
-    private int SENSE_INTERVAL;
-    private String CARDIO_ZONE_MSG;
-    private Long BAND_UPDATE_LAST ;
-    private DailyStep DAILY_STEPS;
-    private long DAILY_STEPS_TIME;
-    private DailyStep PREV_DAILY_STEPS;
-    private long PREV_DAILY_STEPS_TIME;
+    //APP VARIABLES
+    private int SENSE_INTERVAL; //SPORTS_SENSING, NORMAL_SENSING or SLEEP_SENSING
+    private String CARDIO_ZONE_MSG; // CARDIO_ZONE_0_MSG, CARDIO_ZONE_1_MSG, ...
+    private Long BAND_UPDATE_LAST ; //TIMESTAMP OF THE LAST BAND UPDATE (MESSAGE) (IN MILISECONDS)
+    private DailyStep DAILY_STEPS; //CURRENT DAILY STEPS
+    private long DAILY_STEPS_TIME; //CURRENT DAILY STEPS TIME (IN IN MILISECONDS)
+    private DailyStep PREV_DAILY_STEPS; //PREVIOUS DAILY STEPS
+    private long PREV_DAILY_STEPS_TIME; //PREVIOUS DAILY STEPS (IN IN MILISECONDS)
     private Double STEPS_PER_SECOND;
     private Handler handler;
 
@@ -195,23 +198,24 @@ public class SmartSensing extends BaseActivity  {
         DAILY_STEPS=null;
         PREV_DAILY_STEPS=null;
         handler = new Handler();
-        updateSensing();
+        UpdateSensing();
     }
 
 
-    private void updateSensing()
+    private void UpdateSensing()
     {
         if (isSleepingTime()) {
-            SENSE_INTERVAL = SLEEP_SENSING; //Check whether a user is sleeping, if so sense less often
+            SENSE_INTERVAL = SLEEP_SENSING; //Check whether a user is sleeping, if so set SENSE_INTERVAL = SLEEP_SENSING;
         }
         else {
-            CalculateCardioZone();
+            CalculateCardioZone(); //Check which cardio zone
         }
         UpdateUI();
         UpdateBand();
     }
 
     private boolean isSleepingTime() {
+        //check whether current hour is between sleeping period (SLEEP_HOUR_START-SLEEP_HOUR_START-SLEEP_HOUR_START)
         Calendar c =  Calendar.getInstance();
         int hour = c.get(Calendar.HOUR_OF_DAY);
         return (hour>SLEEP_HOUR_END && hour<SLEEP_HOUR_START);
@@ -219,6 +223,7 @@ public class SmartSensing extends BaseActivity  {
 
     private void CalculateCardioZone()
     {
+
         if (DAILY_STEPS == null && PREV_DAILY_STEPS==null)
             return;
 
@@ -228,71 +233,65 @@ public class SmartSensing extends BaseActivity  {
             return;
         }
 
-        //calculate steps per second
+
+        //calculate steps per second STEPS_PER_SECOND = DAILY_STEPS-PREV_DAILY_STEPS/time_passed_sesconds
         double time_passed = (DAILY_STEPS_TIME-PREV_DAILY_STEPS_TIME)/1000.0; //miliseconds to seconds
         STEPS_PER_SECOND = (Double.valueOf(DAILY_STEPS.count)-Double.valueOf(PREV_DAILY_STEPS.count))/time_passed;
         PREV_DAILY_STEPS = DAILY_STEPS;
         PREV_DAILY_STEPS_TIME = DAILY_STEPS_TIME;
 
+        //set cardio message
         if (STEPS_PER_SECOND<CARDIO_ZONE_1_START)
             CARDIO_ZONE_MSG = CARDIO_ZONE_0_MSG;
-
         else if (STEPS_PER_SECOND>=CARDIO_ZONE_1_START && STEPS_PER_SECOND<CARDIO_ZONE_2_START)
             CARDIO_ZONE_MSG = CARDIO_ZONE_1_MSG;
-
         else if (STEPS_PER_SECOND>=CARDIO_ZONE_2_START && STEPS_PER_SECOND<CARDIO_ZONE_3_START)
             CARDIO_ZONE_MSG = CARDIO_ZONE_2_MSG;
-
         else if (STEPS_PER_SECOND>=CARDIO_ZONE_3_START && STEPS_PER_SECOND<CARDIO_ZONE_4_START)
             CARDIO_ZONE_MSG = CARDIO_ZONE_3_MSG;
-
         else if (STEPS_PER_SECOND>=CARDIO_ZONE_4_START)
             CARDIO_ZONE_MSG = CARDIO_ZONE_4_MSG;
 
+
         SENSE_INTERVAL=SPORTS_SENSING;
 
+        //most of the updates will be initiated by the ZOpenStepListenerTask
+        //when the user stops moving, this listener will be inactive, and for hat reason we need one more UpdateUI call
+        //this handel will perform that UI call
         handler.removeMessages(0);//remove any previous calls
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                clearCardioInfo();
+                STEPS_PER_SECOND=0.0;
+                CARDIO_ZONE_MSG = "";
+                SENSE_INTERVAL=NORMAL_SENSING;
+                UpdateUI();
             }
         }, 5000);
     }
 
-
-    public void clearCardioInfo()
-    {
-        STEPS_PER_SECOND=0.0;
-        CARDIO_ZONE_MSG = "";
-        SENSE_INTERVAL=NORMAL_SENSING;
-        UpdateUI();
-    }
-
-
     private void UpdateBand()
     {
-        if (BAND_UPDATE_LAST==null && !CARDIO_ZONE_MSG.equals(""))//if there is a message ready, send it (one message per minute)
+        if (BAND_UPDATE_LAST==null && !CARDIO_ZONE_MSG.equals(""))//if this is the first message and the message is ready send it
         {
             MokoSupport.getInstance().sendOrder(new ZWriteCommonMessageTask(mService, false, CARDIO_ZONE_MSG, true));
             Calendar c =  Calendar.getInstance();
             BAND_UPDATE_LAST =c.getTimeInMillis();
         }
-        if (BAND_UPDATE_LAST!=null)
+        if (BAND_UPDATE_LAST!=null) //if it is not the first message, check how much time has passed since the last band update
         {
             Calendar c =  Calendar.getInstance();
             Long elapsed_seconds = (c.getTimeInMillis()- BAND_UPDATE_LAST)/1000;
-            if (elapsed_seconds>= BAND_UPDATE_INTERVAL) {
+            if (elapsed_seconds>= BAND_UPDATE_INTERVAL) { //send only one message in BAND_UPDATE_INTERVAL
                 BAND_UPDATE_LAST = c.getTimeInMillis();
                 MokoSupport.getInstance().sendOrder(new ZWriteCommonMessageTask(mService, false, CARDIO_ZONE_MSG, true));
             }
         }
-
     }
+
 
     private void UpdateUI()
     {
-        Log.d(TAG,"updateUI...");
         if (DAILY_STEPS == null || PREV_DAILY_STEPS==null)
             return;
         TextView sensing = (TextView)this.findViewById(R.id.sensing_value);
@@ -305,15 +304,12 @@ public class SmartSensing extends BaseActivity  {
         steps.setText(String.valueOf(DAILY_STEPS.count));
         steps_sec.setText(String.valueOf(STEPS_PER_SECOND));
 
-
-        //change color to green if the SENSE_INTERVAL==SPORTS_SENSING
+        //change background color to green if the SENSE_INTERVAL==SPORTS_SENSING
         LinearLayout layout=(LinearLayout)findViewById(R.id.parentLayout);
         if (SENSE_INTERVAL==SPORTS_SENSING)
             layout.setBackgroundColor(Color.GREEN);
         else
             layout.setBackgroundColor(Color.WHITE);
     }
-
-
 
 }
