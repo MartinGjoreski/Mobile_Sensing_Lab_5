@@ -264,6 +264,7 @@ public class SmartSensing extends BaseActivity  {
             public void run() {
                 STEPS_PER_SECOND=0.0;
                 CARDIO_ZONE_MSG = "";
+                PREV_DAILY_STEPS=null;
                 SENSE_INTERVAL=NORMAL_SENSING;
                 UpdateUI();
             }
