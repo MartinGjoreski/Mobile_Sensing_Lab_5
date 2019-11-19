@@ -37,11 +37,10 @@ import butterknife.ButterKnife;
  * @Description
  */
 
-public class MainActivity extends BaseActivity implements AdapterView.OnItemClickListener, MokoScanDeviceCallback {
-    private static final String TAG = "MainActivity";
+public class BtScanActivity extends BaseActivity implements AdapterView.OnItemClickListener, MokoScanDeviceCallback {
+    private static final String TAG = "BtScanActivity";
     @Bind(R.id.lv_device)
     ListView lvDevice;
-
 
 
     private ArrayList<BleDevice> mDatas;
@@ -54,13 +53,13 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
 
     //helper variables to navigate autoconnection
     private String default_pref_string = "NO VALUE";
-    private String pref_key_addresss = "DEVICE_ADDRESS";
+    private String pref_key_address = "DEVICE_ADDRESS";
     private String pref_key_name = "DEVICE_NAME";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_layout);
+        setContentView(R.layout.bt_scan_layout);
         ButterKnife.bind(this);
         bindService(new Intent(this, MokoService.class), mServiceConnection, BIND_AUTO_CREATE);
     }
@@ -74,12 +73,32 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         BleDevice device = readFromSharedPreferences();
         if (!device.address.equals(default_pref_string))
         {
-
             initiateConnection(device);
             return true;
         }
-        mDialog.dismiss(); //Auto connecting not possibld
+        mDialog.dismiss(); //Auto connecting not possible
         return false;
+    }
+
+
+    public void saveToSharedPreferences(BleDevice device)
+    {
+        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(pref_key_address ,device.address);
+        editor.putString(pref_key_name ,device.name);
+        Log.d(TAG,"Added to sharedPrefs:"+device.address);
+        editor.commit();
+    }
+
+    private BleDevice readFromSharedPreferences()
+    {
+        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        BleDevice device = new BleDevice();
+        device.address =  sharedPref.getString(pref_key_address,default_pref_string);
+        device.name = sharedPref.getString(pref_key_name,default_pref_string);
+        Log.d(TAG,"Read from sharedPrefs:"+device.address);
+        return device;
     }
 
     private void initContentView() {
@@ -92,31 +111,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         lvDevice.setOnItemClickListener(this);
     }
 
-    public void searchDevices(View view) {
-        MokoSupport.getInstance().startScanDevice(this);
-    }
 
-    public void saveToSharedPreferences(BleDevice device)
-    {
-        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(pref_key_addresss ,device.address);
-        editor.putString(pref_key_name ,device.name);
-        Log.d(TAG,"Added to sharedPrefs:"+device.address);
-        editor.commit();
-
-    }
-
-    private BleDevice readFromSharedPreferences()
-    {
-        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
-        BleDevice device = new BleDevice();
-        device.address =  sharedPref.getString(pref_key_addresss,default_pref_string);
-        device.name = sharedPref.getString(pref_key_name,default_pref_string);
-        Log.d(TAG,"Read from sharedPrefs:"+device.address);
-
-        return device;
-    }
 
     public void initiateConnection(BleDevice device)
     {
@@ -124,7 +119,6 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         mDevice = device;
         mService.connectBluetoothDevice(mDevice.address);
     }
-
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -142,11 +136,11 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
             if (intent != null) {
                 if (MokoConstants.ACTION_DISCOVER_SUCCESS.equals(intent.getAction())) {
                     abortBroadcast();
-                    if (!MainActivity.this.isFinishing() && mDialog.isShowing()) {
+                    if (!BtScanActivity.this.isFinishing() && mDialog.isShowing()) {
                         mDialog.dismiss();
                     }
-                    Toast.makeText(MainActivity.this, "Connect success", Toast.LENGTH_SHORT).show();
-                    Intent orderIntent = new Intent(MainActivity.this, SendOrderActivity.class);
+                    Toast.makeText(BtScanActivity.this, "Connect success", Toast.LENGTH_SHORT).show();
+                    Intent orderIntent = new Intent(BtScanActivity.this, SmartSensing.class);
                     orderIntent.putExtra("device", mDevice);
                     startActivity(orderIntent);
                 }
@@ -155,10 +149,10 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
                     if (MokoSupport.getInstance().isBluetoothOpen() && MokoSupport.getInstance().getReconnectCount() > 0) {
                         return;
                     }
-                    if (!MainActivity.this.isFinishing() && mDialog.isShowing()) {
+                    if (!BtScanActivity.this.isFinishing() && mDialog.isShowing()) {
                         mDialog.dismiss();
                     }
-                    Toast.makeText(MainActivity.this, "Connect failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BtScanActivity.this, "Connect failed", Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -199,12 +193,18 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         }
     };
 
+    public void searchDevices(View view) {
+        MokoSupport.getInstance().startScanDevice(this);
+    }
+
+
     @Override
     public void onStartScan() {
         deviceMap.clear();
         mDialog.setMessage("Scanning...");
         mDialog.show();
     }
+
 
     @Override
     public void onScanDevice(BleDevice device) {
@@ -216,7 +216,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
 
     @Override
     public void onStopScan() {
-        if (!MainActivity.this.isFinishing() && mDialog.isShowing()) {
+        if (!BtScanActivity.this.isFinishing() && mDialog.isShowing()) {
             mDialog.dismiss();
         }
         mDatas.clear();

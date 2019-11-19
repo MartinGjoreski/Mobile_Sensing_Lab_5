@@ -72,7 +72,7 @@ public class GuideActivity extends BaseActivity {
                     e.printStackTrace();
                 }
                 startService(new Intent(GuideActivity.this, MokoService.class));
-                startActivity(new Intent(GuideActivity.this, MainActivity.class));
+                startActivity(new Intent(GuideActivity.this, BtScanActivity.class));
                 GuideActivity.this.finish();
             }
         }.start();

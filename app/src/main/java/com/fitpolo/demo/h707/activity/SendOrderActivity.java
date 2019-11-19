@@ -779,7 +779,6 @@ public class SendOrderActivity extends BaseActivity {
         private static final int CARDIO_ZONE_MESSAGE_INTERVAL  = 180;  //DANGER ZONE 4: OVER 180 BPM - DANGER ZONE, ONLY FOR ATHLETES
 
 
-
         private static final String CARDIO_ZONE_0_MSG = "VERY LOW INTENSITY CARDIO. INCREASE INTENSITY FOR FAT-BURN ZONE.";
         private static final String CARDIO_ZONE_1_MSG = "LOW INTENSITY - FAT BURN ZONE.";
         private static final String CARDIO_ZONE_2_MSG = "INTERMEDIATE INTENSITY - AEROBIC ZONE.";
@@ -794,8 +793,6 @@ public class SendOrderActivity extends BaseActivity {
         private HeartRate LAST_HEARTRATE;
 
 
-
-
         public void startSmartSensing()
         {
             this.handler = new Handler();
@@ -807,9 +804,7 @@ public class SendOrderActivity extends BaseActivity {
         public void stopSmartSensing()
         {
             if (this.handler!=null)
-            {
                 this.handler.removeMessages(0);
-            }
 
         }
 
@@ -851,11 +846,9 @@ public class SendOrderActivity extends BaseActivity {
         //check if the user is performing activity
         private boolean isActiveTime() {
             ArrayList<HeartRate> latestSportsHeartRate = MokoSupport.getInstance().getSportsHeartRates();
-
             if (latestSportsHeartRate == null || latestSportsHeartRate.isEmpty()) {
                 return false;
             }
-
             //check if the last HR was in the last 2 minutes
             LAST_HEARTRATE = latestSportsHeartRate.get(latestSportsHeartRate.size()-1);
             Calendar calendar_hr = LAST_HEARTRATE.strDate2Calendar(LAST_HEARTRATE.time, "yyyy-MM-dd HH:mm");
